@@ -19,11 +19,13 @@ def ask(request: AskRequest):
     # prompt = {"role": "user", "content": request.question}
     prompt = []
     if request.session_id in chat_history:
-        prompt.append(" ".join(msg['content'] for msg in chat_history[request.session_id] if 'content' in msg))
-        prompt.append(request.question)
+        # prompt.append(" ".join(msg['content'] for msg in chat_history[request.session_id] if 'content' in msg))
+        for msg in chat_history[request.session_id]:
+            prompt.append(f"{msg['role']}: {msg['content']}")
+        prompt.append(f"user: {request.question}")
         chat_history[request.session_id].append({"role":"user", "content": request.question})
     else:
-        prompt.append({request.question})
+        prompt.append(f"user: {request.question}")
         chat_history[request.session_id] = [{"role": "user", "content": request.question} ]
 
     print(chat_history)
