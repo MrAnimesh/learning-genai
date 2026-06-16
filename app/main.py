@@ -16,7 +16,7 @@ def hello():
 
 @app.post("/ask")
 def ask(request: AskRequest):
-    # prompt = {"role": "user", "content": request.question}
+    # prompt = {"role": "user", "content": request.question}-
     prompt = []
     if request.session_id in chat_history:
         # prompt.append(" ".join(msg['content'] for msg in chat_history[request.session_id] if 'content' in msg))
