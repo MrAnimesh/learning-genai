@@ -59,6 +59,20 @@ print(vector)
 print("----------------------------------------------------------------Retrieve")
 
 results = retrieve(
-    "What is Dungeons?"
+    "What is Dungeon?"
 )
 print(results)
+print("----------------------------------------------------------------Context")
+context = "Context: "+"\n\n".join(item[1] for item in results)
+print(context)
+print("----------------------------------------------------------------Context2")
+context = context + "\n\nQuestion:\nWhy did Jinwoo become stronger?\n\nAnswer using only the provided context"
+print(context)
+
+response = client.models.generate_content(
+    model = "gemini-2.5-flash",
+    contents = context
+)
+print("------------------Final response by gemini-------------------")
+print(response.text)
+
