@@ -11,6 +11,7 @@ def retrieve(question, k = 3):
     question_embedding = get_embedding(question)
 
     scores = []
+    # Bruteforce Search
     for item in vector:
         similarity = cosine_similarity(question_embedding, item["embedding"])
         scores.append((similarity, item["text"]))
@@ -18,11 +19,15 @@ def retrieve(question, k = 3):
     scores.sort(reverse=True)
     return scores[:k]
 
-def cosine_similarity(v1, v2):
+def cosine_similarity(v1, v2) -> float:
     v1 = np.array(v1)
     v2 = np.array(v2)
 
-    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+    denominator = (np.linalg.norm(v1) * np.linalg.norm(v2))
+    if denominator == 0:
+        return 0.0
+
+    return float(np.dot(v1, v2) / denominator)
 
 def get_embedding(text: str):
     res = client.models.embed_content(
@@ -40,13 +45,15 @@ def get_embedding(text: str):
 #     "Hunters enter gates to fight monsters."
 # ]
 
-
+print("----------------------------------------------------------------Text extraction")
 text = extract_text_from_pdf("../uploads/solo_leveling.pdf")
 print(text)
-print("----------------------------------------------------------------Chunk")
+
+print("----------------------------------------------------------------Text Chunk")
 chunks = chunk_text(text)
 print(chunks)
-print("----------------------------------------------------------------vector")
+
+print("----------------------------------------------------------------Vector store")
 for chunk in chunks:
     vector.append(
         {
@@ -62,10 +69,11 @@ results = retrieve(
     "What is Dungeon?"
 )
 print(results)
-print("----------------------------------------------------------------Context")
+print("----------------------------------------------------------------Building Context")
 context = "Context: "+"\n\n".join(item[1] for item in results)
 print(context)
-print("----------------------------------------------------------------Context2")
+
+print("----------------------------------------------------------------Building Context 2")
 context = context + "\n\nQuestion:\nWhy did Jinwoo become stronger?\n\nAnswer using only the provided context"
 print(context)
 

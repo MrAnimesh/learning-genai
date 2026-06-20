@@ -62,5 +62,5 @@ def find_boundry(text: str, end: int):
 
 
 
-text = extract_text_from_pdf("../uploads/solo_leveling.pdf")
-print(chunk_text(text))
+# text = extract_text_from_pdf("../uploads/solo_leveling.pdf")
+# print(chunk_text(text))
